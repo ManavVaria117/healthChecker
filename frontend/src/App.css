@@ -1,17 +1,326 @@
+:root {
+  --primary-color: #4a6fa5;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --light-bg: #f8f9fa;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f5f7fa;
+}
+
 .App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
   text-align: center;
-  font-family: Arial, sans-serif;
-  margin: 30px;
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+.header h1 {
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #4a6fa5, #3a5a80);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.header p {
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 2rem;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 2rem;
+  transition: var(--transition);
+  position: relative;
+  z-index: 2;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.select-container {
+  margin-bottom: 1.5rem;
 }
 
 button {
-  padding: 10px 20px;
-  font-size: 16px;
-  margin-top: 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 100%;
+  max-width: 200px;
+  margin: 1rem auto 0;
+  display: block;
 }
 
-h2 {
-  color: green;
-  margin-top: 20px;
+button:hover {
+  background-color: #3a5a80;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.loading:after {
+  content: "";
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  color: var(--danger-color);
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.results {
+  width: 100%;
+  margin-top: 2rem;
+  animation: fadeIn 0.5s ease-in-out;
+  position: relative;
+  z-index: 1; /* Lower than the dropdown */
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.results h2 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.results h2:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color), #a5c0ee);
+  border-radius: 3px;
+}
+
+.prediction-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.prediction-item {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+  border-left: 4px solid var(--primary-color);
+}
+
+.prediction-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.prediction-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.prediction-probability {
+  background-color: #e9f5ff;
+  color: var(--primary-color);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 80px;
+  text-align: center;
+}
+
+.footer {
+  margin-top: 3rem;
+  text-align: center;
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid #eee;
+  width: 100%;
+}
+
+/* Custom styles for react-select */
+.custom-select {
+  font-family: inherit;
+  position: relative;
+  z-index: 10; /* Higher than the results section */
+}
+
+.custom-select__control {
+  border: 2px solid #e1e5ee !important;
+  border-radius: 8px !important;
+  min-height: 50px !important;
+  box-shadow: none !important;
+  transition: var(--transition) !important;
+  background-color: white !important;
+}
+
+.custom-select__control--is-focused {
+  border-color: var(--primary-color) !important;
+}
+
+.custom-select__multi-value {
+  background-color: #e9f5ff !important;
+  border-radius: 16px !important;
+  padding: 2px 8px;
+}
+
+.custom-select__multi-value__label {
+  color: var(--primary-color) !important;
+  font-size: 0.9rem;
+}
+
+.custom-select__multi-value__remove {
+  color: var(--primary-color) !important;
+}
+
+.custom-select__multi-value__remove:hover {
+  background-color: #d1e5fb !important;
+  color: #2c5282 !important;
+}
+
+.custom-select__menu {
+  border-radius: 8px !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid #e2e8f0 !important;
+  z-index: 1000 !important; /* Ensure dropdown appears above other elements */
+  margin-top: 4px !important;
+}
+
+.custom-select__option--is-focused {
+  background-color: #f0f7ff !important;
+  color: var(--primary-color) !important;
+}
+
+.custom-select__option--is-selected {
+  background-color: #e9f5ff !important;
+  color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .App {
+    padding: 1.5rem 1rem;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+  
+  .prediction-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .prediction-probability {
+    align-self: flex-end;
+  }
 }
