@@ -61,6 +61,7 @@ function App() {
     const fetchSymptoms = async () => {
       try {
         const response = await axios.get('/api/symptoms');
+        console.log('API Response Data:', response.data);
         const options = response.data.symptoms.map(s => ({
           value: s,
           label: s.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
