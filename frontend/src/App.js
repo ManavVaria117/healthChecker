@@ -60,7 +60,7 @@ function App() {
   useEffect(() => {
     const fetchSymptoms = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/symptoms');
+        const response = await axios.get('/api/symptoms');
         const options = response.data.symptoms.map(s => ({
           value: s,
           label: s.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
@@ -91,7 +91,7 @@ function App() {
     const symptoms = selectedSymptoms.map(s => s.value);
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/predict', { symptoms });
+      const response = await axios.post('/api/predict', { symptoms });
       setPredictions(response.data.top3_predictions);
     } catch (err) {
       setError(err.response?.data?.error || 'Error connecting to the prediction service. Please try again.');
