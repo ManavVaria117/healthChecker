@@ -1,14 +1,4 @@
-import joblib
 import json
-
-# Load trained artifacts
-model = joblib.load("model_rf.joblib")
-mlb = joblib.load("mlb.joblib")
-le = joblib.load("label_encoder.joblib")
-
-# Load symptom vocabulary
-with open("data/symptom_vocab.json") as f:
-    symptom_vocab = json.load(f)
 
 def handler(event, context):
     path = event.get('path', '')
@@ -16,9 +6,11 @@ def handler(event, context):
     body = event.get('body', '')
 
     if method == 'GET' and path == '/api/symptoms':
+        # Dummy symptoms for testing
+        symptoms = ['fever', 'headache', 'fatigue']
         return {
             'statusCode': 200,
-            'body': json.dumps({"symptoms": symptom_vocab}),
+            'body': json.dumps({"symptoms": symptoms}),
             'headers': {'Content-Type': 'application/json'}
         }
     elif method == 'POST' and path == '/api/predict':
@@ -33,10 +25,12 @@ def handler(event, context):
                     'headers': {'Content-Type': 'application/json'}
                 }
 
-            X = mlb.transform([symptoms])
-            probs = model.predict_proba(X)[0]
-            top3_idx = probs.argsort()[-3:][::-1]
-            top3_diseases = [{"disease": le.inverse_transform([i])[0], "probability": round(probs[i], 3)} for i in top3_idx]
+            # Dummy prediction for testing
+            top3_diseases = [
+                {"disease": "Common Cold", "probability": 0.8},
+                {"disease": "Flu", "probability": 0.6},
+                {"disease": "Allergy", "probability": 0.4}
+            ]
             return {
                 'statusCode': 200,
                 'body': json.dumps({"top3_predictions": top3_diseases}),
@@ -45,7 +39,7 @@ def handler(event, context):
         except Exception as e:
             return {
                 'statusCode': 500,
-                'body': json.dumps({"error": str(e)}),
+                'body': json.dumps({"error": f"Prediction failed: {str(e)}"}),
                 'headers': {'Content-Type': 'application/json'}
             }
     else:
