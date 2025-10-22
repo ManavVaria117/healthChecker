@@ -1,7 +1,14 @@
 import json
+import joblib
+import os
+
+# Construct paths to model files relative to this script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+model = joblib.load(os.path.join(script_dir, "model_rf.joblib"))
+mlb = joblib.load(os.path.join(script_dir, "mlb.joblib"))
+le = joblib.load(os.path.join(script_dir, "label_encoder.joblib"))
 
 def handler(event, context):
-    # This function now only handles POST requests for predictions.
     try:
         body = event.get('body', '')
         data = json.loads(body) if body else {}
@@ -14,12 +21,15 @@ def handler(event, context):
                 'headers': {'Content-Type': 'application/json'}
             }
 
-        # Dummy prediction for testing
+        # Predict using the loaded models
+        X = mlb.transform([symptoms])
+        probs = model.predict_proba(X)[0]
+        top3_idx = probs.argsort()[-3:][::-1]
         top3_diseases = [
-            {"disease": "Common Cold", "probability": 0.8},
-            {"disease": "Flu", "probability": 0.6},
-            {"disease": "Allergy", "probability": 0.4}
+            {"disease": le.inverse_transform([i])[0], "probability": round(probs[i], 3)}
+            for i in top3_idx
         ]
+        
         return {
             'statusCode': 200,
             'body': json.dumps({"top3_predictions": top3_diseases}),
@@ -28,6 +38,6 @@ def handler(event, context):
     except Exception as e:
         return {
             'statusCode': 500,
-            'body': json.dumps({"error": f"Prediction failed: {str(e)}"}),
+            'body': json.dumps({"error": str(e)}),
             'headers': {'Content-Type': 'application/json'}
         }

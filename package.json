@@ -3,5 +3,12 @@
     "axios": "^1.12.2",
     "react-autocomplete": "^1.8.1",
     "react-select": "^5.10.2"
+  },
+  "cacheDirectories": [
+    "node_modules",
+    "frontend/node_modules"
+  ],
+  "engines": {
+    "python": "3.9"
   }
 }
