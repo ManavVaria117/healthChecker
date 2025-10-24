@@ -21,7 +21,7 @@ cors.init_app(app,
         r"/api/*": {
             "origins": [
                 "http://localhost:3000",  # For local development
-                "https://healthcheck-frontend.onrender.com"  # Your frontend URL when deployed
+                "https://healthcheck-xi.vercel.app"  # Your Vercel deployment
             ],
             "methods": ["GET", "POST", "OPTIONS", "HEAD"],
             "allow_headers": ["Content-Type", "Authorization"],
