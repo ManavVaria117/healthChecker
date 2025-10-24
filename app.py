@@ -19,12 +19,12 @@ CORS(app)  # allow all origins for development
 def home():
     return jsonify({"message": "Symptom2Disease API is running 🚀"})
 
-@app.route("/symptoms", methods=["GET"])
+@app.route("/api/symptoms", methods=["GET"])
 def get_symptoms():
     """Return the list of known symptoms for checkboxes"""
     return jsonify({"symptoms": symptom_vocab})
 
-@app.route("/predict", methods=["POST"])
+@app.route("/api/predict", methods=["POST"])
 def predict():
     data = request.get_json()
     symptoms = data.get("symptoms", [])
