@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import Select from 'react-select';
 import { FaSearch, FaHeartbeat, FaInfoCircle, FaSpinner } from 'react-icons/fa';
+import { getSymptoms, getPredictions } from './api';
 import './App.css';
 
 // Sample symptoms to show when no search is performed
@@ -60,9 +60,8 @@ function App() {
   useEffect(() => {
     const fetchSymptoms = async () => {
       try {
-        const response = await axios.get('/api/symptoms');
-        console.log('API Response Data:', response.data);
-        const options = response.data.symptoms.map(s => ({
+        const data = await getSymptoms();
+        const options = data.symptoms.map(s => ({
           value: s,
           label: s.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
         }));
@@ -92,8 +91,8 @@ function App() {
     const symptoms = selectedSymptoms.map(s => s.value);
 
     try {
-      const response = await axios.post('/api/predict', { symptoms });
-      setPredictions(response.data.top3_predictions);
+      const data = await getPredictions(symptoms);
+      setPredictions(data.top3_predictions);
     } catch (err) {
       setError(err.response?.data?.error || 'Error connecting to the prediction service. Please try again.');
     } finally {
