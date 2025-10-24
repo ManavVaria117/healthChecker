@@ -1,15 +1,23 @@
 import json
 import joblib
 import os
+model = None
+mlb = None
+le = None
 
-# Construct paths to model files relative to this script
-script_dir = os.path.dirname(os.path.abspath(__file__))
-model = joblib.load(os.path.join(script_dir, "model_rf.joblib"))
-mlb = joblib.load(os.path.join(script_dir, "mlb.joblib"))
-le = joblib.load(os.path.join(script_dir, "label_encoder.joblib"))
+def load_models():
+    global model, mlb, le
+    if model is None:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        model = joblib.load(os.path.join(script_dir, "model_rf.joblib"))
+        mlb = joblib.load(os.path.join(script_dir, "mlb.joblib"))
+        le = joblib.load(os.path.join(script_dir, "label_encoder.joblib"))
 
 def handler(event, context):
     try:
+        # Load models on first request
+        load_models()
+        
         body = event.get('body', '')
         data = json.loads(body) if body else {}
         symptoms = data.get("symptoms", [])
