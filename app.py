@@ -15,18 +15,21 @@ with open("data/symptom_vocab.json") as f:
 app = Flask(__name__)
 
 # Configure CORS to allow requests from your frontend
-CORS(app, 
-     resources={
-         r"/api/*": {
-             "origins": [
-                 "http://localhost:3000",  # For local development
-                 "https://healthcheck-frontend.onrender.com"  # Your frontend URL when deployed
-             ],
-             "methods": ["GET", "POST", "OPTIONS"],
-             "allow_headers": ["Content-Type"]
-         }
-     },
-     supports_credentials=True)
+cors = CORS()
+cors.init_app(app, 
+    resources={
+        r"/api/*": {
+            "origins": [
+                "http://localhost:3000",  # For local development
+                "https://healthcheck-frontend.onrender.com"  # Your frontend URL when deployed
+            ],
+            "methods": ["GET", "POST", "OPTIONS", "HEAD"],
+            "allow_headers": ["Content-Type", "Authorization"],
+            "supports_credentials": True,
+            "expose_headers": ["Content-Type"],
+            "max_age": 600
+        }
+    })
 
 @app.route("/")
 def home():
