@@ -13,7 +13,20 @@ with open("data/symptom_vocab.json") as f:
     symptom_vocab = json.load(f)
 
 app = Flask(__name__)
-CORS(app)  # allow all origins for development
+
+# Configure CORS to allow requests from your frontend
+CORS(app, 
+     resources={
+         r"/api/*": {
+             "origins": [
+                 "http://localhost:3000",  # For local development
+                 "https://healthcheck-frontend.onrender.com"  # Your frontend URL when deployed
+             ],
+             "methods": ["GET", "POST", "OPTIONS"],
+             "allow_headers": ["Content-Type"]
+         }
+     },
+     supports_credentials=True)
 
 @app.route("/")
 def home():

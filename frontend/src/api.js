@@ -5,6 +5,8 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,  // Important for sending cookies if using sessions
+  timeout: 10000,  // 10 second timeout
 });
 
 export const getSymptoms = async () => {
